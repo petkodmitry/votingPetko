@@ -39,6 +39,7 @@ public class VotingApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+
 //    @Autowired
 //    private WebApplicationContext wac;
 //    @Autowired
