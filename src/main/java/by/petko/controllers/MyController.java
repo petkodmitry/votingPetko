@@ -102,7 +102,7 @@ public class MyController {
     }
 
     @RequestMapping(value = "/statistics/{id}", method = RequestMethod.GET)
-    public Map<String, String> showStatistic(@PathVariable("id") int id) {
+    public Map<String, String> showStatistics(@PathVariable("id") int id) {
         Theme theme = themeRepository.findOne(id);
         if (theme == null) throw new NotFoundException();
         Map<String, String> result = new HashMap<>();
@@ -112,15 +112,4 @@ public class MyController {
         }
         return result;
     }
-
-//    @RequestMapping(value = "/statistics/{id}", method = RequestMethod.GET)
-//    public ResponseEntity<Theme> showStatistic(@PathVariable("id") int id) {
-//        Theme theme = themesRepository.findOne(id);
-//        if (theme == null) throw new NotFoundException();
-//        MultiValueMap<String, String> headers = new HttpHeaders();
-//        headers.put("123", Arrays.asList("example"));
-//        headers.put("456", Arrays.asList("example2"));
-//        ResponseEntity<Theme> responseEntity = new ResponseEntity<>(theme, headers, HttpStatus.OK);
-//        return responseEntity;
-//    }
 }
