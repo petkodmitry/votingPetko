@@ -43,8 +43,8 @@ public class Theme implements Serializable {
         this.themeName = themeName;
     }
 
-    @OneToMany(mappedBy = "theme")
-    @Cascade(value = CascadeType.ALL)
+    @OneToMany(mappedBy = "theme", cascade = javax.persistence.CascadeType.ALL)
+//    @Cascade(value = CascadeType.ALL)
     @JsonManagedReference
     public List<ThemeOption> getOptions() {
         return options;
