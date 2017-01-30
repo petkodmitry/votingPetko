@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -111,5 +112,14 @@ public class MyController {
             result.put(themeOption.getOptionName(), themeOption.getQuantity().toString());
         }
         return result;
+    }
+
+
+
+
+
+    @RequestMapping(value = "/addtheme", method = RequestMethod.GET)
+    public ModelAndView openAddForm() {
+        return new ModelAndView("/addTheme");
     }
 }
