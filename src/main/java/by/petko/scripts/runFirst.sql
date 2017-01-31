@@ -13,7 +13,7 @@ create table THEME (
 create table THEME_OPTION(
   option_id INT NOT NULL AUTO_INCREMENT,
   option_name VARCHAR(30) NOT NULL,
-  quantity INT NOT NULL,
+  quantity INT NOT NULL DEFAULT 0,
   theme_id INT NOT NULL,
   PRIMARY KEY (option_id)
 );
