@@ -6,7 +6,7 @@
     <groupId>by.petko</groupId>
     <artifactId>voting</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>voting</name>
     <description>Voting project by Dmitry Petko</description>
