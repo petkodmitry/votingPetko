@@ -23,9 +23,9 @@ $ mvn clean install
 ```
 The application will be available on:
 
-[`http://localhost:8080/votingPetko`]()
+[`http://localhost:8080/votingPetko`](http://localhost:8080/votingPetko)
 
-## 5. Actions description
+## 4. Actions description
 
 #### a) Create New Theme
 
