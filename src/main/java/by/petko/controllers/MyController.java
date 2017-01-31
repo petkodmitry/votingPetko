@@ -33,13 +33,8 @@ public class MyController {
      * @return the list of actually all themes
      */
     @RequestMapping(value = "/themes", method = RequestMethod.GET)
-    public List<Theme> allThemesList() {
-        Iterable<Theme> result = themeRepository.findAll();
-        List<Theme> resultList = new ArrayList<>();
-        for (Theme theme : result) {
-            resultList.add(theme);
-        }
-        return resultList;
+    public Iterable<Theme> allThemesList() {
+        return themeRepository.findAll();
     }
 
     /**

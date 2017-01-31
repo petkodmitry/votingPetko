@@ -78,7 +78,6 @@
         </dependency>
     </dependencies>
 
-    <!-- Package as an executable jar -->
     <build>
         <finalName>votingPetko</finalName>
         <plugins>
