@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -39,7 +38,6 @@ public class ThemeOption implements Serializable {
     }
 
     @Column(name = "quantity", nullable = false)
-    @NotNull
     public Integer getQuantity() {
         return quantity;
     }
