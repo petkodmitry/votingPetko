@@ -22,7 +22,7 @@ b)
 ```
 $ mvnw.cmd clean install
 $ cd target
-$ java -jar votingPetko.jar
+$ java -jar votingPetko.war
 ```
 The application will be available on:
 
