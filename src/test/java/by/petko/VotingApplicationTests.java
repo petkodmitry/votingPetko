@@ -1,6 +1,5 @@
 package by.petko;
 
-import by.petko.configurations.WebConfig;
 import by.petko.entities.ThemeOption;
 import by.petko.entities.Theme;
 import org.junit.Before;
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = {VotingApplication.class, WebConfig.class})
+        classes = {VotingApplication.class, TestConfig.class})
 public class VotingApplicationTests {
     private static final String testTheme1 = "testTheme1";
     private static final String testOption1 = "optionTest11";
@@ -29,6 +28,7 @@ public class VotingApplicationTests {
     private static final String testOption3 = "optionTest21";
     private static final String testOption4 = "optionTest22";
     private static boolean isSetUpDone = false;
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -82,8 +82,8 @@ public class VotingApplicationTests {
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
         assertThat(theme.getThemeName()).isEqualTo(testTheme1);
         assertThat(options.size()).isEqualTo(2);
-        assertThat(options.get(0).getOptionName()).isEqualTo(testOption1);
-        assertThat(options.get(1).getOptionName()).isEqualTo(testOption2);
+        assertThat(options.stream().filter(themeOption -> themeOption.getOptionName().contains(testOption1)));
+        assertThat(options.stream().filter(themeOption -> themeOption.getOptionName().contains(testOption2)));
     }
 
     @Test

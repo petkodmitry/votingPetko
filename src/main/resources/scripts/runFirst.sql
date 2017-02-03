@@ -1,21 +1,16 @@
-DROP DATABASE IF EXISTS voting;
-create DATABASE voting;
-use voting;
 create table THEME (
-  theme_id   INT         NOT NULL AUTO_INCREMENT,
+  theme_id   INT         NOT NULL IDENTITY,
   theme_name VARCHAR(50) NOT NULL UNIQUE,
-  start_date TIMESTAMP   NULL DEFAULT NULL,
-  end_date   TIMESTAMP   NULL DEFAULT NULL,
-  link       VARCHAR(100) DEFAULT NULL,
-  PRIMARY KEY (theme_id)
+  start_date TIMESTAMP   DEFAULT NULL NULL,
+  end_date   TIMESTAMP   DEFAULT NULL NULL,
+  link       VARCHAR(100) DEFAULT NULL
 );
 
 create table THEME_OPTION(
-  option_id INT NOT NULL AUTO_INCREMENT,
+  option_id INT NOT NULL IDENTITY,
   option_name VARCHAR(30) NOT NULL,
-  quantity INT NOT NULL DEFAULT 0,
-  theme_id INT NOT NULL,
-  PRIMARY KEY (option_id)
+  quantity INT DEFAULT 0 NOT NULL,
+  theme_id INT NOT NULL
 );
 
 insert into THEME (theme_name) values ('Откуда Вы узнали о нас?');
