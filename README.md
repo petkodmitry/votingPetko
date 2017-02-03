@@ -13,14 +13,23 @@ Client-server communication: REST; content type: JSON.
 ## 2. Running project locally
 a)
 ```
-$ git clone -b master https://github.com/petkodmitry
+[for Git Bash:]
+$ git clone -b master https://github.com/petkodmitry/votingPetko
 $ cd votingPetko
 ```
 or just download ZIP archive on your computer, unzip it and go to the unzipped votingPetko directory
 
 b)
 ```
+[for Git Bash:]
+$ ./mvnw.cmd clean install
+
+[for Windows cmd:]
 $ mvnw.cmd clean install
+
+```
+then
+```
 $ cd target
 $ java -jar votingPetko.war
 ```

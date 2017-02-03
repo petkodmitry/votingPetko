@@ -23,13 +23,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .build();
     }
 
-    /*@Bean
-    public HibernateJpaSessionFactoryBean sessionFactoryBean() {
-        return new HibernateJpaSessionFactoryBean();
-    }*/
-
-    /*@Override
+    @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.jsp("/META-INF/resources/views/", ".jsp");
-    }*/
+        registry.jsp("/WEB-INF/views/", ".jsp");
+    }
 }

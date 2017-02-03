@@ -68,9 +68,6 @@ public class ThemeOption implements Serializable {
             return false;
         if (getOptionName() != null ? !getOptionName().equals(that.getOptionName()) : that.getOptionName() != null) return false;
         return  (getQuantity() != null ? getQuantity().equals(that.getQuantity()) : that.getQuantity() == null);
-//            return false;
-//        return getThemeName() != null ? getThemeName().equals(that.getThemeName()) : that.getThemeName() == null;
-
     }
 
     @Override
