@@ -5,13 +5,13 @@ Client-server communication: REST; content type: JSON.
 
 ## 1. Technologies used
 
-* Spring Boot 1.4.2.RELEASE
+* Spring Boot 1.5.1.RELEASE
 * HSqlDB 2.3.4
 * jUnit 4.12
 * Maven 3.0.5
 
 ## 2. Running project locally
-a)
+a) **_Downloading_**
 ```
 [for Git Bash:]
 $ git clone -b master https://github.com/petkodmitry/votingPetko
@@ -19,16 +19,18 @@ $ cd votingPetko
 ```
 or just download ZIP archive on your computer, unzip it and go to the unzipped votingPetko directory
 
-b)
-```
-[for Git Bash:]
-$ ./mvnw.cmd clean install
+b) **_Installation_**
 
-[for Windows cmd:]
+_*NIX_
+```
+$ ./mvnw clean install
+```
+_Windows_
+```
 $ mvnw.cmd clean install
 
 ```
-then
+c) **_Running_**
 ```
 $ cd target
 $ java -jar votingPetko.war
@@ -49,7 +51,7 @@ The application will be available on:
 
 **_optionName_** -- the actual answer option
 
-`[http://localhost:8080/themes]` (method: POST) or
+`[http://localhost:8080/themes]` (method: POST)
 
 #### b) Get Theme by ID
 `[http://localhost:8080/themes/{id}]` (method: GET)
@@ -64,10 +66,10 @@ The application will be available on:
 `[http://localhost:8080/themes]` (method: GET)
 
 #### f) Get All Opened Themes
-`[http://localhost:8080/opened]` (method: GET)
+`[http://localhost:8080/themes?status=opened]` (method: GET)
 
 #### g) Register Voice
 `[http://localhost:8080/themes/{id}/{optionId}]` (method: PUT)
 
 #### h) View Theme's Statistics
-`[http://localhost:8080/statistics/{id}]` (method: GET)
+`[http://localhost:8080/themes/{id}/statistics]` (method: GET)
