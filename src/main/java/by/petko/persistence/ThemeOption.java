@@ -1,4 +1,4 @@
-package by.petko.entities;
+package by.petko.persistence;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.NotEmpty;

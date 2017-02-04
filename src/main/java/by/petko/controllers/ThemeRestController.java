@@ -1,18 +1,18 @@
 package by.petko.controllers;
 
-import by.petko.entities.ThemeOption;
-import by.petko.entities.Theme;
-import by.petko.exceptions.NotAnOptionOfAThemeException;
-import by.petko.exceptions.NotFoundException;
+import by.petko.dto.Statistics;
+import by.petko.persistence.ThemeOption;
+import by.petko.persistence.Theme;
+import by.petko.exceptions.OptionNotFoundException;
+import by.petko.exceptions.ThemeNotFoundException;
 import by.petko.exceptions.NotAllowedException;
 import by.petko.exceptions.ThemeExistsException;
-import by.petko.repositories.OptionRepository;
-import by.petko.repositories.ThemeRepository;
+import by.petko.persistence.ThemeOptionRepository;
+import by.petko.persistence.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -21,20 +21,25 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-public class MyController {
+public class ThemeRestController {
 
     @Autowired
     private ThemeRepository themeRepository;
     @Autowired
-    private OptionRepository optionRepository;
+    private ThemeOptionRepository optionRepository;
 
     /**
-     * Finds all themes in DataBase and gives them to the user
-     * @return the list of actually all themes
+     * Finds themes (all or by their status) in DataBase and gives them to the user
+     * @return the list of themes
      */
     @RequestMapping(value = "/themes", method = RequestMethod.GET)
-    public Iterable<Theme> allThemesList() {
-        return themeRepository.findAll();
+    public Iterable<Theme> allThemesList(
+            @RequestParam(required = false) String status) {
+        if ("opened".equals(status)) {
+            return themeRepository.getOpenedThemes();
+        } else {
+            return themeRepository.findAll();
+        }
     }
 
     /**
@@ -58,9 +63,7 @@ public class MyController {
      */
     @RequestMapping(value = "/themes/{id}", method = RequestMethod.GET)
     public Theme getTheme(@PathVariable("id") int id) {
-        Theme result = themeRepository.findOne(id);
-        if (result == null) throw new NotFoundException();
-        return result;
+        return findOneRequired(id);
     }
 
     /**
@@ -70,12 +73,9 @@ public class MyController {
     @RequestMapping(value = "/themes/{id}/start", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void startVoting(@PathVariable("id") int id) {
-        Theme theme = themeRepository.findOne(id);
-        if (theme == null) throw new NotFoundException();
-        Date startDate = theme.getStartDate();
-        Date endDate = theme.getEndDate();
-        if (startDate != null || endDate != null ) throw new NotAllowedException();
-        Link link = linkTo(methodOn(MyController.class).getTheme(id)).withSelfRel();
+        Theme theme = findOneRequired(id);
+        if (!theme.canBeStarted()) throw new NotAllowedException();
+        Link link = linkTo(methodOn(ThemeRestController.class).getTheme(id)).withSelfRel();
         theme.setLink(link.getHref());
         theme.setStartDate(new Date());
         themeRepository.save(theme);
@@ -88,22 +88,10 @@ public class MyController {
     @RequestMapping(value = "/themes/{id}/stop", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void stopVoting(@PathVariable("id") int id) {
-        Theme theme = themeRepository.findOne(id);
-        if (theme == null) throw new NotFoundException();
-        Date startDate = theme.getStartDate();
-        Date endDate = theme.getEndDate();
-        if (startDate == null || endDate != null ) throw new NotAllowedException();
+        Theme theme = findOneRequired(id);
+        if (!theme.isStarted()) throw new NotAllowedException();
         theme.setEndDate(new Date());
         themeRepository.save(theme);
-    }
-
-    /**
-     * Finds opened themes in DataBase and gives them to the user
-     * @return the list of all opened themes
-     */
-    @RequestMapping(value = "/opened", method = RequestMethod.GET)
-    public Set<Theme> getAllOpenedThemes() {
-        return themeRepository.getOpenedThemes();
     }
 
     /**
@@ -114,16 +102,11 @@ public class MyController {
     @RequestMapping(value = "/themes/{id}/{optionId}", method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public Theme voiceRegistration(@PathVariable("id") int id, @PathVariable("optionId") int optionId) {
-        Theme theme = themeRepository.findOne(id);
-        if (theme == null) throw new NotFoundException();
+        Theme theme = findOneRequired(id);
         ThemeOption themeOption = optionRepository.findOne(optionId);
-        if (themeOption == null) throw new NotFoundException();
-        if (theme.getEndDate() != null ||
-                theme.getStartDate() == null ||
-                theme.getStartDate().getTime() > new Date().getTime()){
-            throw new NotAllowedException();
-        }
-        if (!theme.getOptions().contains(themeOption)) throw new NotAnOptionOfAThemeException();
+        if (themeOption == null) throw new OptionNotFoundException();
+        if (!theme.isStarted()) throw new NotAllowedException();
+        if (!theme.getOptions().contains(themeOption)) throw new OptionNotFoundException();
         themeOption.setQuantity(themeOption.getQuantity() + 1);
         optionRepository.save(themeOption);
         return theme;
@@ -132,30 +115,21 @@ public class MyController {
     /**
      * Shows statistics of desired Theme
      * @param id - the ID of the Theme
-     * @return a Map with one pair "Theme" - "[themeName]" and several pairs "[optionName]" - "[quantity]"
+     * @return a Statistics object for the Theme
      */
-    @RequestMapping(value = "/statistics/{id}", method = RequestMethod.GET)
-    public Map<String, String> showStatistics(@PathVariable("id") int id) {
-        Theme theme = themeRepository.findOne(id);
-        if (theme == null) throw new NotFoundException();
-        Map<String, String> result = new HashMap<>();
-        result.put("Theme", theme.getThemeName());
-        for (ThemeOption themeOption : theme.getOptions()) {
-            result.put(themeOption.getOptionName(), themeOption.getQuantity().toString());
-        }
-        return result;
+    @RequestMapping(value = "/themes/{id}/statistics", method = RequestMethod.GET)
+    public Statistics showStatistics(@PathVariable("id") int id) {
+        Theme theme = findOneRequired(id);
+        return new Statistics(theme);
     }
 
-
-
-
-
     /**
-     * Opens the JSP page with a new Theme add form
-     * @return ModelAndView handler, to be resolved by a DispatcherServlet
+     * @param id - the ID of the Theme
+     * @return the Theme found in the DataBase by given ID or throws ThemeNotFoundException
      */
-    @RequestMapping(value = "/addtheme", method = RequestMethod.GET)
-    public ModelAndView openAddForm() {
-        return new ModelAndView("/addTheme");
+    private Theme findOneRequired(int id) {
+        Theme theme = themeRepository.findOne(id);
+        if (theme == null) throw new ThemeNotFoundException();
+        return theme;
     }
 }

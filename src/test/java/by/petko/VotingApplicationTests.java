@@ -1,7 +1,7 @@
 package by.petko;
 
-import by.petko.entities.ThemeOption;
-import by.petko.entities.Theme;
+import by.petko.persistence.ThemeOption;
+import by.petko.persistence.Theme;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -143,7 +143,7 @@ public class VotingApplicationTests {
     @Test
     @Transactional
     public void getOpenedThemes() {
-        ResponseEntity<Theme[]> responseEntity = restTemplate.getForEntity("/opened", Theme[].class);
+        ResponseEntity<Theme[]> responseEntity = restTemplate.getForEntity("/themes?status=opened", Theme[].class);
         Theme[] openedThemes = responseEntity.getBody();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
@@ -179,20 +179,20 @@ public class VotingApplicationTests {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED);
         responseEntity = restTemplate.exchange("/themes/1/5",
                 HttpMethod.PUT, null, Theme.class);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FAILED_DEPENDENCY);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @Transactional
     public void getStatistics() {
-        ResponseEntity<Theme> responseEntity = restTemplate.getForEntity("/statistics/1", Theme.class);
+        ResponseEntity<Theme> responseEntity = restTemplate.getForEntity("/themes/1/statistics", Theme.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @Transactional
     public void getStatistics1() {
-        ResponseEntity<Theme> responseEntity = restTemplate.getForEntity("/statistics/100", Theme.class);
+        ResponseEntity<Theme> responseEntity = restTemplate.getForEntity("/themes/100/statistics", Theme.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

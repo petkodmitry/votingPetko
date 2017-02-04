@@ -1,6 +1,5 @@
-package by.petko.repositories;
+package by.petko.persistence;
 
-import by.petko.entities.Theme;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

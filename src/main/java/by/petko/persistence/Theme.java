@@ -1,4 +1,4 @@
-package by.petko.entities;
+package by.petko.persistence;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -81,33 +81,31 @@ public class Theme implements Serializable {
         this.link = link;
     }
 
+    @Transient
+    public boolean isStarted() {
+        return this.getEndDate() == null &&
+                this.getStartDate() != null &&
+                this.getStartDate().before(new Date());
+    }
+
+    @Transient
+    public boolean canBeStarted() {
+        return this.getStartDate() == null &&
+                this.getEndDate() == null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Theme)) return false;
 
         Theme theme = (Theme) o;
-
-        if (getThemeId() != null ? !getThemeId().equals(theme.getThemeId()) : theme.getThemeId() != null)
-            return false;
-        if (getThemeName() != null ? !getThemeName().equals(theme.getThemeName()) : theme.getThemeName() != null) return false;
-        if (getOptions() != null ? !getOptions().equals(theme.getOptions()) : theme.getOptions() != null)
-            return false;
-        if (getStartDate() != null ? !getStartDate().equals(theme.getStartDate()) : theme.getStartDate() != null)
-            return false;
-        if (getLink() != null ? !getLink().equals(theme.getLink()) : theme.getLink() != null) return false;
-        return getEndDate() != null ? getEndDate().equals(theme.getEndDate()) : theme.getEndDate() == null;
+        return getThemeName() != null ? getThemeName().equals(theme.getThemeName()) : theme.getThemeName() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getThemeId() != null ? getThemeId().hashCode() : 0;
-        result = 31 * result + (getThemeName() != null ? getThemeName().hashCode() : 0);
-        result = 31 * result + (getOptions() != null ? getOptions().hashCode() : 0);
-        result = 31 * result + (getStartDate() != null ? getStartDate().hashCode() : 0);
-        result = 31 * result + (getEndDate() != null ? getEndDate().hashCode() : 0);
-        result = 31 * result + (getLink() != null ? getLink().hashCode() : 0);
-        return result;
+        return (getThemeName() != null ? getThemeName().hashCode() : 0);
     }
 
     @Override
