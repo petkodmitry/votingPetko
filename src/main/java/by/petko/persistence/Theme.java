@@ -8,13 +8,13 @@ import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Theme implements Serializable {
     private Integer themeId;
     private String themeName;
-    private List<ThemeOption> options;
+    private Set<ThemeOption> options;
     private Date startDate;
     private Date endDate;
     private String link;
@@ -43,11 +43,11 @@ public class Theme implements Serializable {
 
     @OneToMany(mappedBy = "theme", cascade = javax.persistence.CascadeType.ALL)
     @JsonManagedReference
-    public List<ThemeOption> getOptions() {
+    public Set<ThemeOption> getOptions() {
         return options;
     }
 
-    public void setOptions(List<ThemeOption> options) {
+    public void setOptions(Set<ThemeOption> options) {
         this.options = options;
     }
 

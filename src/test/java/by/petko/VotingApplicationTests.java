@@ -12,8 +12,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -35,7 +35,7 @@ public class VotingApplicationTests {
     private Theme newTheme(String themeName, String ... optionNames) {
         Theme result = new Theme();
         result.setThemeName(themeName);
-        List<ThemeOption> optionsList = new ArrayList<>();
+        Set<ThemeOption> optionsList = new HashSet<>();
         for (String name : optionNames) {
             ThemeOption option = new ThemeOption();
             option.setOptionName(name);
@@ -77,7 +77,7 @@ public class VotingApplicationTests {
     public void getOne() {
         ResponseEntity<Theme> responseEntity = restTemplate.getForEntity("/themes/1", Theme.class);
         Theme theme = responseEntity.getBody();
-        List<ThemeOption> options = theme.getOptions();
+        Set<ThemeOption> options = theme.getOptions();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
         assertThat(theme.getThemeName()).isEqualTo(testTheme1);
@@ -159,7 +159,8 @@ public class VotingApplicationTests {
                 HttpMethod.PUT, null, Theme.class);
         assertThat(responseEntity.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON_UTF8);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
-        assertThat(responseEntity.getBody().getOptions().get(0).getQuantity()).isEqualTo(1);
+        assertThat(responseEntity.getBody().getOptions().stream()
+                .filter(themeOption -> themeOption.getQuantity().equals(1)));
     }
 
     @Test

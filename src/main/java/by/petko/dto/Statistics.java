@@ -4,7 +4,7 @@ import by.petko.persistence.Theme;
 import by.petko.persistence.ThemeOption;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Set;
 import java.util.Map;
 
 public class Statistics {
@@ -13,7 +13,7 @@ public class Statistics {
 
     public Statistics(Theme theme) {
         this.themeName = theme.getThemeName();
-        List<ThemeOption> themeOptions = theme.getOptions();
+        Set<ThemeOption> themeOptions = theme.getOptions();
         for (ThemeOption themeOption : themeOptions) {
             this.themeOptionsMap.put(themeOption.getOptionName(), themeOption.getQuantity());
         }
