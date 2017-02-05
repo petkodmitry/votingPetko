@@ -32,7 +32,7 @@ public class ThemeRestController {
      * Finds themes (all or by their status) in DataBase and gives them to the user
      * @return the list of themes
      */
-    @RequestMapping(value = "/themes", method = RequestMethod.GET)
+    @GetMapping(value = "/themes")
     public Iterable<Theme> allThemesList(
             @RequestParam(required = false) String status) {
         if ("opened".equals(status)) {
@@ -46,7 +46,7 @@ public class ThemeRestController {
      * @param newTheme - Theme entity, converted form JSON format
      * @return newly created Theme with actual DataBase IDs
      */
-    @RequestMapping(value = "/themes", method = RequestMethod.POST)
+    @PostMapping(value = "/themes")
     @ResponseStatus(value = HttpStatus.CREATED)
     public Theme addTheme(@RequestBody @Valid Theme newTheme) {
         Theme themeInDataBase = themeRepository.getByName(newTheme.getThemeName());
@@ -61,7 +61,7 @@ public class ThemeRestController {
      * @param id - the ID of the Theme to be searched in DataBase
      * @return found Theme
      */
-    @RequestMapping(value = "/themes/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/themes/{id}")
     public Theme getTheme(@PathVariable("id") int id) {
         return findOneRequired(id);
     }
@@ -70,7 +70,7 @@ public class ThemeRestController {
      * Starts voting process for the Theme (changes startDate option to current time value)
      * @param id - the ID of the Theme to be started
      */
-    @RequestMapping(value = "/themes/{id}/start", method = RequestMethod.PUT)
+    @PutMapping(value = "/themes/{id}/start")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void startVoting(@PathVariable("id") int id) {
         Theme theme = findOneRequired(id);
@@ -85,7 +85,7 @@ public class ThemeRestController {
      * Stops voting process for the Theme (changes stopDate option to current time value)
      * @param id - the ID of the Theme to be stopped
      */
-    @RequestMapping(value = "/themes/{id}/stop", method = RequestMethod.PUT)
+    @PutMapping(value = "/themes/{id}/stop")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void stopVoting(@PathVariable("id") int id) {
         Theme theme = findOneRequired(id);
@@ -99,7 +99,7 @@ public class ThemeRestController {
      * @param optionId - the ID of the Option selected
      * @return the Theme with actual statuses of its Options
      */
-    @RequestMapping(value = "/themes/{id}/{optionId}", method = RequestMethod.PUT)
+    @PutMapping(value = "/themes/{id}/{optionId}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public Theme voiceRegistration(@PathVariable("id") int id, @PathVariable("optionId") int optionId) {
         Theme theme = findOneRequired(id);
@@ -117,7 +117,7 @@ public class ThemeRestController {
      * @param id - the ID of the Theme
      * @return a Statistics object for the Theme
      */
-    @RequestMapping(value = "/themes/{id}/statistics", method = RequestMethod.GET)
+    @GetMapping(value = "/themes/{id}/statistics")
     public Statistics showStatistics(@PathVariable("id") int id) {
         Theme theme = findOneRequired(id);
         return new Statistics(theme);

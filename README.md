@@ -23,6 +23,7 @@ b) **_Installation_**
 
 _*NIX_
 ```
+$ chmod 775 mvnw
 $ ./mvnw clean install
 ```
 _Windows_
